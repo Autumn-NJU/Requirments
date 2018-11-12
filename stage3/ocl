@@ -1,0 +1,78 @@
+# case 1 
+context Competition::id : String int:
+	Competition::uniqueID()
+
+
+context Competition def:
+	statics: Set(tuple(player, score, judgement) = 
+		preparations -> collect(p | 
+			Tuple {
+				player: Player = p, 
+				score: Double = average(count -> collect(judgement.score)),
+				judgement = Judgement
+			}
+		)
+
+context Competition::getVideo():Video
+	pre: self.bottomHardware.isOk() = true
+	body: self.video = self.bottomHareware.transformFile()
+
+
+
+# case 2
+context Judgement::grade()::double
+	pre: judgement.login() = true
+	body: tuple(player, self.score)  -> collect(p | 
+		Tuple {
+			player: Player,
+			scores: average(count -> collect(scores))
+		}
+	)
+	post: self.Competition.includes(player) and 
+		self.Competition.save(player, self.score)
+
+# case 3_1
+context Coach::getPlayerData()::List
+	pre: coach.login() = true
+	body: self.player -> select(self.player.name = name) -> (data: (name, age, 
+		Set(tuple(competition, rank), Set(honors)) ) -> collect(p | 
+			Tuple {
+				age: player.age
+				collect(competition, rank) -> (rank -> collect(cid, rank)) -> not empty()
+				rank (player.honors) -> not empty()
+			}
+		)
+
+
+# case 3_2
+context Coach::analyzeProbabilisticAction::List
+	pre: coach.login() = true
+	body: self.player -> select(self.player.name = name) -> (predict_data
+		Set(machineLearning -> analyze(self.period))
+	)
+
+# case 4
+context Audience::watchCompetition::bool {
+	pre: self.bottomHardware.isOk() = true
+	body: self.video = self.bottomHareware.transformFile()
+}
+
+# case 5
+context Coach::checkCompetitionDetails::bool {
+	pre: self.bottomHardware.isOk() = true
+	body: self.video = self.bottomHareware.transformFile()
+		  self.details -> collect(player, period).player -> select 
+		  	player: player.name = self.player.name and video.period = self.period
+
+}
+
+# case 6
+context Judgement::watchCompetition::bool {
+		pre: self.bottomHardware.isOk() = true
+		body: self.video = self.bottomHareware.transformFile()
+			self.playback = video[:period] -> select (player, video, 		period) -> Tuple(player: self.player, video: self.video, period: 		self.period)
+	}
+
+
+
+
